@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flowers For You 🌸</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+  <style>
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    @keyframes sway { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
+    @keyframes fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(360deg);opacity:0} }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+    @keyframes shimmer { 0%,100%{opacity:.7} 50%{opacity:1} }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #fff9f0; font-family: var(--font-sans, sans-serif); overflow-x: hidden; }
+
+    #petals-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+    .petal { position:absolute; font-size:1.4rem; animation:fall linear infinite; opacity:.85; }
+
+    .hero { position:relative; z-index:1; text-align:center; padding:3rem 1rem 1rem; }
+    .hero h1 { font-size:2.2rem; font-weight:500; color:#b5478a; animation:pulse 3s ease-in-out infinite; line-height:1.3; }
+    .hero p { font-size:1.05rem; color:#d4748e; margin-top:.75rem; font-style:italic; }
+
+    .flowers-row { display:flex; justify-content:center; flex-wrap:wrap; gap:2rem; padding:2rem 1rem; position:relative; z-index:1; }
+
+    .flower-card { background:#fff; border-radius:20px; padding:1.5rem 1.2rem; text-align:center; border:1.5px solid #f7c8d8; max-width:160px; animation:float ease-in-out infinite; cursor:default; transition:transform .2s; }
+    .flower-card:hover { transform:scale(1.07) translateY(-6px); }
+    .flower-card .bloom { font-size:3.5rem; display:block; margin-bottom:.5rem; }
+    .flower-card .name { font-size:.85rem; font-weight:500; color:#b5478a; }
+    .flower-card .meaning { font-size:.78rem; color:#c47a9a; margin-top:.25rem; line-height:1.4; }
+
+    .message-box { position:relative; z-index:1; margin:1.5rem auto; max-width:520px; background:linear-gradient(135deg,#fff0f5,#fff8f0); border-radius:24px; border:2px solid #f7c0d4; padding:2rem 2rem; text-align:center; animation:shimmer 4s ease-in-out infinite; }
+    .message-box .quote { font-size:1.15rem; color:#9e3a6e; line-height:1.7; font-style:italic; }
+    .message-box .hearts { font-size:1.5rem; margin-top:.75rem; letter-spacing:.4rem; }
+
+    .cheer-strip { position:relative; z-index:1; background:#ffe4f0; border-top:1px solid #f7c0d4; border-bottom:1px solid #f7c0d4; padding:1rem; text-align:center; overflow:hidden; }
+    .cheer-strip .words { display:inline-flex; gap:2rem; white-space:nowrap; animation:marquee 18s linear infinite; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .cheer-strip span { font-size:.95rem; color:#b5478a; font-weight:500; }
+
+    .bouquet { position:relative; z-index:1; text-align:center; padding:2rem 1rem 1rem; }
+    .bouquet-emoji { font-size:5rem; display:inline-block; animation:sway 3s ease-in-out infinite; transform-origin:bottom center; }
+
+    .footer { position:relative; z-index:1; text-align:center; padding:1.5rem 1rem 2.5rem; color:#d4748e; font-size:.85rem; }
+  </style>
+
+  <div id="petals-container"></div>
+
+  <div class="hero">
+    <h1>Smile my Brightes Flower 🌸</h1>
+    <p>This little garden was made for you Bul</p>
+  </div>
+
+  <div class="cheer-strip">
+    <div class="words">
+      <span>🌷 You are loved</span>
+      <span>🌸 You are enough</span>
+      <span>🌻 You are wonderful</span>
+      <span>🌺 You are radiant</span>
+      <span>🌼 You bring joy</span>
+      <span>💐 You are beautiful</span>
+      <span>🌷 You are strong</span>
+      <span>🌸 You are loved</span>
+      <span>🌻 You are enough</span>
+      <span>🌺 You are wonderful</span>
+      <span>🌼 You are radiant</span>
+      <span>💐 You bring joy</span>
+    </div>
+  </div>
+
+  <div class="flowers-row" id="flower-grid"></div>
+
+  <div class="message-box">
+    <div class="quote" id="quote-text">"Every flower is a soul blossoming in nature — and so are you."</div>
+    <div class="hearts">🌸 💕 🌸</div>
+    <button onclick="newQuote()" style="margin-top:1rem;background:#f7c0d4;border:none;border-radius:20px;padding:.5rem 1.2rem;font-size:.85rem;color:#9e3a6e;cursor:pointer;font-weight:500;">New message ↗</button>
+  </div>
+
+  <div class="bouquet">
+    <div class="bouquet-emoji">💐</div>
+    <p style="font-size:.95rem;color:#c47a9a;margin-top:.5rem;">A bouquet of sunshine, just for you</p>
+  </div>
+
+  <div class="footer">Made with 💕 especially for you · You deserve all the flowers · I love you Naja</div>
+
+  <script>
+  const flowers = [
+    { bloom:"🌸", name:"Cherry Blossom", meaning:"Beauty & new beginnings" },
+    { bloom:"🌻", name:"Sunflower", meaning:"Happiness & warmth" },
+    { bloom:"🌷", name:"Tulip", meaning:"Perfect love" },
+    { bloom:"🌺", name:"Hibiscus", meaning:"Delicate beauty" },
+    { bloom:"🌼", name:"Daisy", meaning:"Innocence & joy" },
+    { bloom:"🌹", name:"Rose", meaning:"Deep love & passion" },
+    { bloom:"💐", name:"Bouquet", meaning:"A heart full of care" },
+    { bloom:"🪷", name:"Lotus", meaning:"Grace & strength" },
+  ];
+
+  const quotes = [
+    "\"Every flower is a soul blossoming in nature — and so are you.\"",
+    "\"Like a flower, you grow more beautiful every day.\"",
+    "\"The world is a little more colorful because you're in it.\"",
+    "\"Bloom where you are planted — you already do, brilliantly.\"",
+    "\"You carry the sun wherever you go. Never forget that.\"",
+    "\"Even on cloudy days, flowers still reach for the light — and so do you.\"",
+    "\"You are not just a flower, you are the whole garden.\"",
+  ];
+
+  let qi = 0;
+  function newQuote() {
+    qi = (qi + 1) % quotes.length;
+    document.getElementById('quote-text').textContent = quotes[qi];
+  }
+
+  const grid = document.getElementById('flower-grid');
+  flowers.forEach((f, i) => {
+    const card = document.createElement('div');
+    card.className = 'flower-card';
+    card.style.animationDuration = (2.5 + i * 0.4) + 's';
+    card.style.animationDelay = (i * 0.2) + 's';
+    card.innerHTML = `<span class="bloom">${f.bloom}</span><div class="name">${f.name}</div><div class="meaning">${f.meaning}</div>`;
+    grid.appendChild(card);
+  });
+
+  const petalEmojis = ['🌸','🌺','🌷','🌼','💮','🌻'];
+  const container = document.getElementById('petals-container');
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petalEmojis[i % petalEmojis.length];
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.fontSize = (0.9 + Math.random() * 1.2) + 'rem';
+    p.style.animationDuration = (6 + Math.random() * 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    container.appendChild(p);
+  }
+  </script>
+
+</body>
+</html>
